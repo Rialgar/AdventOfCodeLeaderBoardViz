@@ -31,5 +31,8 @@ button {
 button:hover, button:focus {
   color: #99ff99;
 }
+.privboard-row {
+  white-space: pre;
+}
 .privboard-star-firstonly { color: #9999cc; }
 .privboard-star-both      { color: #ffff66; }

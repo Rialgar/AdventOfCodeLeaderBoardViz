@@ -1,5 +1,5 @@
 function formatNum(num, len=2, pad='0'){
-    out = num.toString()
+    let out = num.toString()
     while(out.length < len){
         out = pad + out;
     }
@@ -20,7 +20,7 @@ function formatDate(date){
 let maxNameLen = 0
 
 function formatName(name){
-    out = name
+    let out = name
     while(out.length < maxNameLen-1){
         out = ' ' + out + ' '
     }
@@ -46,10 +46,10 @@ document.getElementById('Analyze').addEventListener('click', function (event) {
     analyzeDiv.innerHTML = '';
     timelineDiv.style.display = 'none';
     
-    json = form.json.value
+    const json = form.json.value
     localStorage.json = json
-    data = JSON.parse(json)
-    days = [];
+    const data = JSON.parse(json)
+    const days = [];
     for( let i=0; i < 25; i++){
         const day = {
             label: (i+1).toString(),
@@ -121,9 +121,9 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
     timelineDiv.style.display = 'block';
     timelineDiv.innerHTML = '';
     
-    json = form.json.value
+    const json = form.json.value
     localStorage.json = json
-    data = JSON.parse(json)
+    const data = JSON.parse(json)
 
     const container = document.createElement('div');
     timelineDiv.appendChild(container);
@@ -138,14 +138,15 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
     let maxNameLen = 0;
     let earliest = Number.MAX_SAFE_INTEGER;
     let latest = 0;
-    for(member of Object.values(data.members)){
-        maxNameLen = Math.max(maxNameLen, member.name.length);
 
+    const members = Object.values(data.members);
+    members.sort((a, b) => b.local_score - a.local_score);
+    for(member of members){
         const rowContainer = document.createElement('div');
         container.appendChild(rowContainer);
 
         const nameDiv = document.createElement('div');
-        nameDiv.textContent = member.name;
+        nameDiv.textContent = `${member.name} (${member.local_score})`;
         rowContainer.appendChild(nameDiv);
 
         const row = document.createElement('div');
@@ -186,22 +187,25 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
         }
 
         row.addEventListener('wheel', (event) => {
-            event.preventDefault();
-            const mouseInRow = (event.clientX - row.clientLeft) / row.clientWidth;
-            const mouseOffset = mouseInRow / zoom * (latest-earliest) - offset + earliest;
-            if(event.deltaY < 0){
-                zoom *= 1.05;
-            } else {
-                zoom /= 1.05;
+            if(event.ctrlKey || event.metaKey){
+                event.preventDefault();
+                const mouseInRow = (event.clientX - row.clientLeft) / row.clientWidth;
+                const mouseOffset = mouseInRow / zoom * (latest-earliest) - offset + earliest;
+                if(event.deltaY < 0){
+                    zoom *= 1.05;
+                } else {
+                    zoom /= 1.05;
+                }
+                const changedMouseOffset = mouseInRow / zoom * (latest-earliest) - offset + earliest;
+                offset += changedMouseOffset - mouseOffset;
+                container.style.setProperty('--offset', offset);
+                container.style.setProperty('--zoom', zoom);
             }
-            const changedMouseOffset = mouseInRow / zoom * (latest-earliest) - offset + earliest;
-            offset += changedMouseOffset - mouseOffset;
-            container.style.setProperty('--offset', offset);
-            container.style.setProperty('--zoom', zoom);
         });
         row.addEventListener('click', (event) => {
-            offset = 10000;
-            zoom = 0.98;
+            event.preventDefault();
+            offset = 0;
+            zoom = 1;
             container.style.setProperty('--offset', offset);
             container.style.setProperty('--zoom', zoom);
         })
@@ -229,7 +233,7 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
 
     earliest = earliestLine;
     latest = lastLine;
-    
+
     container.style.setProperty('--earliest', earliest);
     container.style.setProperty('--latest', latest);
 })
