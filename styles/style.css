@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  src: url(./font/SourceCodePro-VariableFont_wght.ttf) format('truetype');
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: italic;
+  src: url(./font/SourceCodePro-Italic-VariableFont_wght.ttf) format('truetype');
+}
+
+body {
+  background: #0f0f23; /*337 x 5*/
+  color: #cccccc;
+  font-family: "Source Code Pro", monospace;
+  font-size: 14pt;
+  font-weight: 300;
+}
+
+button {
+  background: transparent;
+  border: 0;
+  font-family: inherit;
+  font-size: inherit;
+  margin: 0;
+  padding: 0;
+  color: #009900;
+  cursor: pointer;
+}
+button:hover, button:focus {
+  color: #99ff99;
+}
+.privboard-star-firstonly { color: #9999cc; }
+.privboard-star-both      { color: #ffff66; }

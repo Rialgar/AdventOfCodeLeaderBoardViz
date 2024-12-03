@@ -1,0 +1,29 @@
+div.timeline {
+    margin-top: 1rem;
+}
+
+div.timeline .row {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333340;
+    background: #10101a;
+    height: 1.5rem;
+    margin-top: .3rem;
+    margin-bottom: .7rem;
+}
+
+.timeline-item {
+    position: absolute;
+    left: calc( ( var(--time) - var(--earliest) + var(--offset) ) / ( var(--latest) - var(--earliest) ) * var(--zoom) * 100% );
+}
+
+.timeline-dateline {
+    height: 100%;
+    border-left: 1px solid #333340;
+}
+
+.timeline-star {
+    user-select: none;
+    cursor: pointer;
+    text-decoration: none;
+}
