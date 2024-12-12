@@ -49,6 +49,11 @@ document.getElementById('Analyze').addEventListener('click', function (event) {
     const json = form.json.value
     localStorage.json = json
     const data = JSON.parse(json)
+    for(playerId in data.members){
+        if(!data.members[playerId].name){
+            data.members[playerId].name = `anon${playerId}`;
+        }
+    }
     const days = [];
     for( let i=0; i < 25; i++){
         const day = {
@@ -124,6 +129,11 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
     const json = form.json.value
     localStorage.json = json
     const data = JSON.parse(json)
+    for(playerId in data.members){
+        if(!data.members[playerId].name){
+            data.members[playerId].name = `anon${playerId}`;
+        }
+    }
 
     const container = document.createElement('div');
     timelineDiv.appendChild(container);
