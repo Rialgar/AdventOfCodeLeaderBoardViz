@@ -38,6 +38,7 @@ if(localStorage.json){
 
 const analyzeDiv = document.getElementById('AnalyzeDiv');
 const timelineDiv = document.getElementById('TimelineDiv');
+const timeToSecondDiv = document.getElementById('TimeToSecondDiv');
 
 document.getElementById('Analyze').addEventListener('click', function (event) {
     event.preventDefault();
@@ -45,7 +46,8 @@ document.getElementById('Analyze').addEventListener('click', function (event) {
     analyzeDiv.style.display = 'block';
     analyzeDiv.innerHTML = '';
     timelineDiv.style.display = 'none';
-    
+    timeToSecondDiv.style.display = 'none';
+
     const json = form.json.value
     localStorage.json = json
     const data = JSON.parse(json)
@@ -121,11 +123,12 @@ document.getElementById('Analyze').addEventListener('click', function (event) {
 
 document.getElementById('Timeline').addEventListener('click', function (event) {
     event.preventDefault();
-    
+
     analyzeDiv.style.display = 'none';
     timelineDiv.style.display = 'block';
     timelineDiv.innerHTML = '';
-    
+    timeToSecondDiv.style.display = 'none';
+
     const json = form.json.value
     localStorage.json = json
     const data = JSON.parse(json)
@@ -145,7 +148,6 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
     container.style.setProperty('--offset', offset);
     container.style.setProperty('--zoom', zoom);
 
-    let maxNameLen = 0;
     let earliest = Number.MAX_SAFE_INTEGER;
     let latest = 0;
 
@@ -246,4 +248,51 @@ document.getElementById('Timeline').addEventListener('click', function (event) {
 
     container.style.setProperty('--earliest', earliest);
     container.style.setProperty('--latest', latest);
+})
+
+document.getElementById('TimeToSecond').addEventListener('click', function (event) {
+    event.preventDefault();
+
+    analyzeDiv.style.display = 'none';
+    timelineDiv.style.display = 'none';
+    timeToSecondDiv.style.display = 'block';
+    timeToSecondDiv.innerHTML = '';
+
+    const json = form.json.value;
+    localStorage.json = json;
+    const data = JSON.parse(json);
+    for(playerId in data.members){
+        if(!data.members[playerId].name){
+            data.members[playerId].name = `anon${playerId}`;
+        }
+    }
+
+    for(let member of Object.values(data.members)){
+        member.time_to_second_score = 0;
+        member.time_to_second = {};
+    }
+
+    for(let day = 1; day <= 25; day++){
+        const daysList = [];
+        for(let member of Object.values(data.members)){
+            if(member.completion_day_level[day] && member.completion_day_level[day][2]){
+                member.time_to_second[day] = member.completion_day_level[day][2].get_star_ts - member.completion_day_level[day][1].get_star_ts;
+                daysList.push(member);
+            }
+        }
+        daysList.sort((a, b) => a.time_to_second[day] - b.time_to_second[day]);
+        daysList.forEach((member, index) => {
+            member.time_to_second_score += daysList.length - index;
+        });
+    };
+
+    const members = Object.values(data.members);
+    members.sort((a, b) => b.time_to_second_score - a.time_to_second_score);
+
+    for(let member of members){
+        const p = document.createElement('p');
+        p.className = 'privboard-row';
+        p.textContent = `${member.name}: ${member.time_to_second_score}`;
+        timeToSecondDiv.appendChild(p);
+    }
 })

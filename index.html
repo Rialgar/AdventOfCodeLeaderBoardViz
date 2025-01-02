@@ -3,7 +3,7 @@
     <head>
         <title>Rialgar's Advent of Code Leaderboard Visualizer - Not affiliated with Advent of Code</title>
         <link rel="stylesheet" type="text/css" href="./styles/style.css"/>
-        <link rel="stylesheet alternate" type="text/css" href="./styles/highcontrast.css" title="High Contrast"/>
+        <!--link rel="stylesheet alternate" type="text/css" href="./styles/highcontrast.css" title="High Contrast"/-->
         <link rel="stylesheet" type="text/css" href="./styles/timeline.css"/>
         <script src="script.js" defer></script>
     </head>
@@ -13,9 +13,10 @@
         <form id="form">
             <p>Paste JSON API response here:</p>
             <textarea name="json" rows="10" cols = "100"></textarea>
-            <p><button id="Analyze">Analyze</button> - <button id="Timeline">Timeline</button></p>
+            <p><button id="Analyze">Analyze</button> - <button id="Timeline">Timeline</button> - <button id="TimeToSecond">Time to Second</button></p>
         </form>
         <div id="AnalyzeDiv" style="display: none;"></div>
         <div id="TimelineDiv" style="display: none;"></div>
+        <div id="TimeToSecondDiv" style="display: none;"></div>
     </body>
 </html>
